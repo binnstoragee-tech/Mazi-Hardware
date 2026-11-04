@@ -269,3 +269,17 @@ body{overflow-x:clip}
 
 /* hero hotspots above hero text */
 .hs{z-index:2}.tip b+a{margin-top:8px}
+
+/* ===== Laptop / desktop view = 80% (same as browser zoom 80%). Phones & tablets unchanged.
+   To change: set --z (e.g. .85) and --zi to 1 / --z (e.g. 1.176) ===== */
+@media(min-width:1100px){
+  html{--z:.8;--zi:1.25;zoom:var(--z)}
+  /* viewport units are scaled by zoom too, so compensate */
+  .hero{height:calc(100svh*var(--zi) - 136px)}
+  .vbanner{height:min(calc(80vh*var(--zi)),780px)}
+  .vbanner.first{height:calc(100svh*var(--zi) - 136px)}
+  .hero.low{height:min(calc(56vw*var(--zi)),calc(85vh*var(--zi)),860px)}
+  .brands{width:calc(100vw*var(--zi));margin:56px calc(50% - 50vw*var(--zi)) 0}
+  .page{min-height:calc(60vh*var(--zi))}
+  .wrap{padding:0 clamp(20px,calc(3.2vw*var(--zi)),72px)}
+}
