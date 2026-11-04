@@ -12,21 +12,22 @@ const MENU={
 'More':{cols:[[g('Explore More','Shop All'),g('Safety & Security','Safes|Padlocks')],[g('Fans','Ceiling Fans|Exhaust Fans|Orbital Fans|Stand Fans|Wall Fans')],[g('Gardening Tools','Garden Hoes|Pruning tools|Rakes|Wheelbarrows')],[g('Safety & Workwear','PPE|Safety footwear|Workwear')],[g('Professional Cleaning','Carpet Cleaners|Detergents|Floor Scrubbers|Karcher Accessories|Professional Cleaning|Vacuums|Wet and Dry Vacuum Cleaners')],[g('Lifestyle','Lifestyle|Electronics|Fashion Accessories|Beauty & Wellness|Crafts & stationery')]]}};
 const CATS=['Hardware','Tools & Equipment','Power Tools','Electrical','Lighting','Home','Kitchen','Bathroom','Fishing','More'];
 const FB='https://www.facebook.com/',IG='https://www.instagram.com/'; // TODO: replace with Mazi Hardware Facebook / Instagram page links
-const WA='9600000000'; // TODO: replace with Mazi Hardware WhatsApp/Viber number (country code, no +)
+const WA='9607509686'; // Mazi Hardware Viber number (country code, no +)
+const VB='viber://chat?number=%2B'+WA;
 const PRODUCTS=[
 ['Cordless Angle Grinder 20V',1792,'Power Tools','Ingco'],['Mini Angle Grinder 4"',1021,'Power Tools','Bosch'],['Angle Grinder 710W',646,'Power Tools','Ingco'],['Impact Drill 650W',845,'Power Tools','Bosch'],
 ['Claw Hammer 16oz',95,'Tools & Equipment','Ingco'],['Measuring Tape 8m',48,'Tools & Equipment','Ingco'],['Screwdriver Set 12pc',160,'Tools & Equipment','Ingco'],['Interior Emulsion Paint 18L',1150,'Hardware','Caparol'],
 ['Acoustic Slatted Wall Panel 2.4m',685,'Hardware','Mazi'],['Floor Tile 60x60cm (box)',420,'Hardware','Mazi'],['Double Socket 13A',72,'Electrical','ABB'],['Extension Cord 5m',130,'Electrical','Dunlop'],
 ['LED Downlight 12W',58,'Lighting','Mazi'],['Pendant Light Black',390,'Lighting','Mazi'],['Ceiling Fan 48"',1923,'Home','Orient'],['Wet & Dry Vacuum Cleaner',1189,'Home','Karcher'],
 ['Air Fryer 4L',1260,'Kitchen','Tefal'],['Cookware Set 5pc',1480,'Kitchen','Tefal'],['Shower Set with Rain Head',4850,'Bathroom','Hansgrohe'],['Basin Mixer Chrome',1290,'Bathroom','Roca'],['Spinning Reel 4000',780,'Fishing','Shimano'],['Shore Rod 3.6m',640,'Fishing','Shimano'],['Safety Helmet',85,'More','Dunlop'],['Brass Padlock 50mm',70,'More','Mazi']];
-const BRANDS=['ABB','Bosch','Caparol','Dunlop','Hansgrohe','Ingco','Karcher','Roca','Tefal'];
+const BRANDS=[['Aqua Star','aqua_star'],['EZ Bond','ez_bond'],['G Floor','gfloor'],['Sumofix','sumofix']];
 const NEW=PRODUCTS.slice(14,19);
 const POWER=PRODUCTS.filter(p=>p[2]==='Power Tools');
 
 /* ===== App ===== */
 const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
 const money=n=>'MVR '+n.toLocaleString('en',{minimumFractionDigits:2,maximumFractionDigits:2});
-const enq=n=>`https://wa.me/${WA}?text=${encodeURIComponent('Hi, I would like to enquire about: '+n)}`;
+const enq=n=>VB;
 const label=c=>c;
 const CHEV='<svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.6"><path d="m2 4 3.5 3.5L9 4"/></svg>';
 /* Flat line icons: thin single-colour outline (48x48) */
@@ -110,13 +111,19 @@ $('#dx').onclick=closeDr;ov.onclick=closeDr;
 $('#dm').innerHTML=`<button data-go="All">All products</button>`+CATS.map(c=>`<button data-go="${c}">${label(c)}</button>`).join('');
 
 /* Hero hotspots */
-if($('#hs'))$('#hs').innerHTML=[['24%','14%',PRODUCTS[12]],['76%','28%',PRODUCTS[8]],['58%','86%',PRODUCTS[9]]].map(h=>`<div class="hs" style="left:${h[0]};top:${h[1]}"><button aria-label="Product">+</button><div class="tip"><b>${h[2][0]}</b><span>${money(h[2][1])}</span><a href="${enq(h[2][0])}" target="_blank" rel="noreferrer">ENQUIRE</a></div></div>`).join('');
+/* Hero hotspots: positions are points on the image, recalculated for the cover crop on every resize */
+(()=>{const hs=$('#hs');if(!hs)return;const hero=hs.parentElement,IW=2576,IH=1438;
+const H=[['Shower Set',770,330],['Faucet',2170,745],['Toilet',420,925],['LED Smart Mirror',2240,400],['Wash Basin',2010,870],['Wall Lights',2005,430]];
+hs.innerHTML=H.map(h=>`<div class="hs"><button aria-label="${h[0]}">+</button><div class="tip"><b>${h[0]}</b><a href="${enq(h[0])}" target="_blank" rel="noreferrer">ENQUIRE</a></div></div>`).join('');
+const place=()=>{const w=hero.clientWidth,hh=hero.clientHeight,s=Math.max(w/IW,hh/IH),ox=(w-IW*s)/2,oy=(hh-IH*s)/2;
+$$('.hs',hs).forEach((el,i)=>{const x=ox+H[i][1]*s,y=oy+H[i][2]*s;el.style.display=(x>24&&x<w-24&&y>24&&y<hh-24)?'':'none';el.style.left=x+'px';el.style.top=y+'px'})};
+place();addEventListener('resize',place)})();
 $$('.hs>button').forEach(b=>b.onclick=()=>{const h=b.parentElement,on=h.classList.contains('on');$$('.hs').forEach(x=>{x.classList.remove('on');x.firstChild.textContent='+'});if(!on){h.classList.add('on');b.textContent='×'}});
 
 /* Sections */
 if($('#icons'))$('#icons').innerHTML=CI.map(c=>`<button class="ico" data-go="${c[1]}" data-q="${c[2]}"><svg viewBox="0 0 48 48">${ICONS[c[0]]}</svg><span>${c[0]}</span></button>`).join('');
-if($('#tiles'))$('#tiles').innerHTML=[['LIVING','Wall panels & finishes','Hardware','20% 60%'],['POWER TOOLS','Tools for every project','Power Tools','80% 40%'],['LIGHTING','Bright ideas for every room','Lighting','25% 5%'],['HOME','Everything for the home','Home','60% 95%']].map(t=>`<button class="tile" style="background-position:${t[3]}" data-go="${t[2]}"><small>${t[0]}</small><span>${t[1]}</span></button>`).join('');
-if($('#brands')){const it=[...BRANDS,...BRANDS].map(b=>`<button data-go="All" data-q="${b}">${b}</button>`).join('');
+if($('#tiles'))$('#tiles').innerHTML=[['WALL PUTTY','Smooth finish for every wall','Hardware','wall_putty'],['TILE ADHESIVE','Strong bond for every tile','Hardware','tile_adhesive'],['LIGHTING','Bright ideas for every room','Lighting','lighting'],['HOME','Everything for the home','Home','home']].map(t=>`<button class="tile" style="background:#333 url(img/4_highlights/${t[3]}.webp) center/cover no-repeat" data-go="${t[2]}"><small>${t[0]}</small><span>${t[1]}</span></button>`).join('');
+if($('#brands')){const it=[...BRANDS,...BRANDS].map(b=>`<button data-go="All" data-q="${b[0]}" aria-label="${b[0]}"><img src="img/brands/${b[1]}.png" alt="${b[0]}"></button>`).join('');
 $('#brands').innerHTML=`<div class="bh">Brands</div><div class="bm"><div class="bt">${it}${it}</div></div>`} /* two identical halves -> seamless slide-left loop */
 if($('#r1'))$('#r1').innerHTML=NEW.map(card).join('');
 /* Footer (dark green, columns) */
@@ -131,12 +138,16 @@ f.innerHTML=`<div class="wrap"><div class="fg2">
 </div><div class="cpr">Copyright 2026 © MAZI HARDWARE</div></div>`})();
 $('#fb').innerHTML=CATS.slice(0,6).map(c=>`<button data-go="${c}">${c}</button>`).join('');
 
-/* Contact dropdown (WhatsApp / Viber) */
+/* Contact dropdown (Viber) */
 (()=>{const ct=$('#ct'),b=$('#ctb');if(!ct||!b)return;const set=o=>{ct.classList.toggle('open',o);b.setAttribute('aria-expanded',o)};
 b.addEventListener('click',e=>{e.stopPropagation();if(matchMedia('(hover:hover)').matches)return; /* desktop: opens on hover */set(!ct.classList.contains('open'))});
 document.addEventListener('click',e=>{if(!ct.contains(e.target))set(false)});
 addEventListener('keydown',e=>{if(e.key==='Escape')set(false)})})();
-$('#hwa').href='https://wa.me/'+WA;$('#hvb').href='viber://chat?number=%2B'+WA;
+/* Viber only: dropdown shows a single Viber chat link */
+(()=>{const cm=$('#cm');
+if(cm){cm.innerHTML=`<a href="${VB}"><img class="vi" src="img/viber.webp" alt="Viber"><span><b>Viber</b><small>+960 750 9686</small></span></a>`}
+else{const w=$('#hwa');if(w)w.remove();const v=$('#hvb');if(v){v.href=VB;v.innerHTML='<img class="vi" src="img/viber.webp" alt="Viber">'}}
+const fw=$('#wa');if(fw)fw.remove();const fv=$('#vb');if(fv){fv.href=VB;fv.textContent='Viber: +960 750 9686';const p=fv.parentElement.querySelector('p');if(p)p.textContent='Message us on Viber to order.'}})();
 
 /* Footer logo: strip the white background by redrawing the image with white pixels made transparent */
 (()=>{const im=$('footer img');if(!im)return;
