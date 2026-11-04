@@ -161,3 +161,6 @@ x.putImageData(d,0,0);im.src=c.toDataURL('image/png')}catch(e){im.style.filter='
 document.addEventListener('click',e=>{const g=e.target.closest('[data-go]');if(g){e.preventDefault();go(g.dataset.go,g.dataset.q||'')}});
 $('#sf').addEventListener('submit',e=>{e.preventDefault();go('All',$('#q').value)});
 readURL();renderCatalog();
+
+/* Favicon (applies to every page that loads this script) */
+;(()=>{if(document.querySelector('link[rel~="icon"]'))return;const l=document.createElement('link');l.rel='icon';l.type='image/png';l.href='img/favicon.png';document.head.appendChild(l)})();
